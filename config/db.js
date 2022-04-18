@@ -1,15 +1,15 @@
 import { createPool } from "mysql2/promise";
-import { DATABASEDB, HOSTDB, PASSWORDDB, PORTDB, USERDB, } from "./config.js";
+import { DATABASE_DB, HOST_DB, PASSWORD_DB, PORT_DB, USER_DB, } from "./config.js";
 
-console.log("DATABASEDB:", DATABASEDB)
+console.log("DATABASE_DB:", DATABASE_DB)
 
 
 const pool = createPool({
-    host: HOSTDB,
-    user: USERDB,
-    password: PASSWORDDB,
-    port: PORTDB,
-    database: DATABASEDB
+    host: HOST_DB,
+    user: USER_DB,
+    password: PASSWORD_DB,
+    port: PORT_DB,
+    database: DATABASE_DB
 });
 
-export {pool}; 
+export {pool};
