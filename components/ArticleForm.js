@@ -10,6 +10,7 @@ export function ArticleForm() {
     articletitle: "",
     description: "",
     price: 0,
+    articlecategoryid: 1,
   });
 
   const [image, setImage] = useState(null);
@@ -22,7 +23,7 @@ export function ArticleForm() {
       articletitle: "",
       description: "",
       price: 0,
-      articlecategoryid: "",
+      articlecategoryid: 1,
     },
     onSubmit: (values) => handleFormSubmit(values),
   });
@@ -138,22 +139,25 @@ export function ArticleForm() {
 
         <div className="mb-4">
           <label htmlFor="articlecategoryid" style={{ display: "block" }}>
-            Color
+            categories
           </label>
           <select
             name="categories"
             value={formik.values.articlecategoryid}
-            onChange={formik.handleChange}
             style={{ display: "block" }}
           >
             {articleCategories.map((category) => (
-              <option
-                key={category.articlecategoryid}
-                value=""
-                label={category.articlecategory}
-              >
-                {category.articlecategory}
-              </option>
+              <>
+                {console.log(category)}
+                <option
+                  key={category.articlecategoryid}
+                  value={category.articlecategoryid}
+                  label={category.articlecategory}
+                  onChange={formik.handleChange}
+                >
+                  {category.articlecategory}
+                </option>
+              </>
             ))}
           </select>
         </div>
