@@ -9,9 +9,15 @@ import {
 } from "firebase/auth";
 
 // objeto que contiene la config de firebase al crear el proyecto
-import { firebaseConfig } from "./firebaseConfig";
+const firebaseConfig = {
+  apiKey: "AIzaSyDMrVCx3Czfj5Rcp52Dk544UKTaZ7CzRAg",
+  authDomain: "escolapop-db7d2.firebaseapp.com",
+  projectId: "escolapop-db7d2",
+  storageBucket: "escolapop-db7d2.appspot.com",
+  messagingSenderId: "22410271497",
+  appId: "1:22410271497:web:a573e2f2e658e5aced91d8",
+};
 
-// eslint-disable-next-line no-unused-vars
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
