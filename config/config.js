@@ -13,4 +13,3 @@ export const PROJECTID_FB = process.env.PROJECTID_FB;
 export const STORAGEBUCKET_FB = process.env.STORAGEBUCKET_FB;
 export const MESSAGINGSENDERID_FB = process.env.MESSAGINGSENDERID_FB;
 export const APPID_FB = process.env.APPID_FB;
-

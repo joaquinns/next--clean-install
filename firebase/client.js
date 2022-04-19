@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 import {
   getAuth,
   signOut,
@@ -9,9 +15,15 @@ import {
 } from "firebase/auth";
 
 // objeto que contiene la config de firebase al crear el proyecto
-import { firebaseConfig } from "./firebaseConfig";
+const firebaseConfig = {
+  apiKey: "AIzaSyDMrVCx3Czfj5Rcp52Dk544UKTaZ7CzRAg",
+  authDomain: "escolapop-db7d2.firebaseapp.com",
+  projectId: "escolapop-db7d2",
+  storageBucket: "escolapop-db7d2.appspot.com",
+  messagingSenderId: "22410271497",
+  appId: "1:22410271497:web:a573e2f2e658e5aced91d8",
+};
 
-// eslint-disable-next-line no-unused-vars
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
@@ -59,14 +71,26 @@ export const firebaseLogout = () => {
     });
 };
 
+// iniciamos el storage
 const storage = getStorage(app);
 
 export const uploadImage = (file) => {
+  // creamos la referencia de donde se guradaran en firebase y el nombre del archivo
   const reference = ref(storage, `images/${file.name}`);
-  // const ref = app.storage().ref(`images/${file.name}`);
-  uploadBytes(reference, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+  // Lo subimos
+  const uploadTask = uploadBytesResumable(reference, file);
 
-  console.log(reference.name);
+  // Mientras se sube recuperamos su estado
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    },
+    // si hay error lo ejecutamos
+    (err) => console.log(err),
+    // si todo fue ok hacemos un callback con una promesa recuperando la url
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((url) => console.log(url));
+    }
+  );
 };

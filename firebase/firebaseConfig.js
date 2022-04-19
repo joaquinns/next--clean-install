@@ -1,4 +1,11 @@
-import { APIKEY_FB, APPID_FB, AUTHDOMAIN_FB, MESSAGINGSENDERID_FB, PROJECTID_FB, STORAGEBUCKET_FB } from "../config/config";
+import {
+  APIKEY_FB,
+  APPID_FB,
+  AUTHDOMAIN_FB,
+  MESSAGINGSENDERID_FB,
+  PROJECTID_FB,
+  STORAGEBUCKET_FB,
+} from "../config/config";
 
 //console.log("APIKEY_FB: ", APIKEY_FB);
 //console.log("AUTHDOMAIN_FB: ", AUTHDOMAIN_FB);
