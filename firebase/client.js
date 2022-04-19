@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 import {
   getAuth,
   signOut,
@@ -70,9 +76,16 @@ const storage = getStorage(app);
 export const uploadImage = (file) => {
   const reference = ref(storage, `images/${file.name}`);
   // const ref = app.storage().ref(`images/${file.name}`);
-  uploadBytes(reference, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+  const uploadTask = uploadBytesResumable(reference, file);
 
-  console.log(reference.name);
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    },
+    (err) => console.log(err),
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((url) => console.log(url));
+    }
+  );
 };
