@@ -20,28 +20,21 @@ function HomePage({ articles }) {
     ));
   }; */
 
-  const renderArticles = () => {
-    console.log("articles.length: ", articles.length);
-    {!articles.length > 0 ? (
-      <h1 className="text-center text-2xl font-bold">No hi ha articles</h1>
-    ) : (
-      articles.map((article) => (
-        <ArticleCard key={article.articleid} article={article} />
-      ))
-    )}
-
-  }
-
-
   return (
     <Layout>
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        {renderArticles()}
+        {!articles.length > 0 ? (
+          <h1 className="text-center text-2xl font-bold">No hi ha articles</h1>
+        ) : (
+          articles.map((article) => (
+            <ArticleCard key={article.articleid} article={article} />
+          ))
+        )}
       </div>
-{/*       <div>
+      {/*       <div>
         <h1 className="text-xl">Funciona! tailwind!</h1>
       </div>
- */}      
+ */}
     </Layout>
   );
 }
@@ -49,8 +42,7 @@ function HomePage({ articles }) {
 //// Funció especial de Next per executar codi de server que s'executa abans que la pantalla es presenti en el client.
 ////   Després carrega el return de HomePage
 export const getServerSideProps = async (context) => {
-
-/*   const response = await fetch(HOST_SV + PORT_SV + "/api/articles");
+  const response = await fetch(HOST_SV + PORT_SV + "/api/articles");
   if (!response.ok) {
     const error = new Error("something bad happended");
     console.log(error);
@@ -58,32 +50,37 @@ export const getServerSideProps = async (context) => {
   const articles = await response.json();
   // console.log(data);
   console.log(articles);
- */
 
-  const {data: articles} = await axios.get(HOST_SV + PORT_SV + "/api/articles")
-  console.log(articles);
+  /*   const { data: articles } = await axios.get(
+    HOST_SV + PORT_SV + "/api/articles"
+  );
+  console.log(articles); */
 
-  const {data: articleCategory} = await axios.get(HOST_SV + PORT_SV + "/api/tables", {
-    params: {
-      table: "articleCategory"
+  /*   const { data: articleCategory } = await axios.get(
+    HOST_SV + PORT_SV + "/api/tables",
+    {
+      params: {
+        table: "articleCategory",
+      },
     }
-  })
+  ); */
   //console.log(articleCategory);
-  
-  const {data: articleStatus} = await axios.get(HOST_SV + PORT_SV + "/api/tables", {
-    params: {
-      table: "articleStatus"
+
+  /*   const { data: articleStatus } = await axios.get(
+    HOST_SV + PORT_SV + "/api/tables",
+    {
+      params: {
+        table: "articleStatus",
+      },
     }
-  })
+  ); */
   //console.log(articleStatus);
-
-
 
   return {
     props: {
       articles,
-      articleCategory,
-      articleStatus,
+      // articleCategory,
+      // articleStatus,
     },
   };
 };
