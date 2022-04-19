@@ -71,19 +71,24 @@ export const firebaseLogout = () => {
     });
 };
 
+// iniciamos el storage
 const storage = getStorage(app);
 
 export const uploadImage = (file) => {
+  // creamos la referencia de donde se guradaran en firebase y el nombre del archivo
   const reference = ref(storage, `images/${file.name}`);
-  // const ref = app.storage().ref(`images/${file.name}`);
+  // Lo subimos
   const uploadTask = uploadBytesResumable(reference, file);
 
+  // Mientras se sube recuperamos su estado
   uploadTask.on(
     "state_changed",
     (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
     },
+    // si hay error lo ejecutamos
     (err) => console.log(err),
+    // si todo fue ok hacemos un callback con una promesa recuperando la url
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then((url) => console.log(url));
     }
