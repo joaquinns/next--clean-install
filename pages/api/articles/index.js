@@ -22,13 +22,13 @@ const getArticles = async (req, res) => {
 };
 
 const saveArticle = async (req, res) => {
-  const { articletitle, description, price } = req.body;
+  const { articletitle, description, price, useremail } = req.body;
 
   try {
     //console.log("creant un article")
     //console.log(req.body);
 
-    if (req.files.image) {
+    if (req.files?.image) {
       const result = await uploadImage(req.files.image.tempFilepath);
       console.log(result);
     }
@@ -36,6 +36,7 @@ const saveArticle = async (req, res) => {
       articletitle,
       description,
       price,
+      useremail,
     });
     //console.log(result);
     return res
