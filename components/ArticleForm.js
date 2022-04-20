@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { uploadImage } from "../firebase/client";
@@ -13,6 +14,7 @@ export function ArticleForm({ articleUpdateId = null }) {
     price: "",
     description: "",
   });
+  const router = useRouter();
   const { user } = useUser();
 
   /*   const handleFileUpload = (event) => {
@@ -76,6 +78,7 @@ export function ArticleForm({ articleUpdateId = null }) {
                 useremail: `${user.email}`,
               }
             );
+            router.push("/");
           }
           return axios
             .post("http://localhost:3000/api/articles", {
