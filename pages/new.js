@@ -1,17 +1,18 @@
 import { Layout } from "../components/Layout";
 import { ArticleForm } from "../components/ArticleForm";
-
+import { useRouter } from "next/router";
 
 function NewPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  console.log(id);
   return (
     <Layout>
       <div className="grid place-items-center bg-5/6">
-        <ArticleForm />
-
+        <ArticleForm articleUpdateId={id} />
       </div>
-  </Layout>
-
-  )
+    </Layout>
+  );
 }
 
-export default NewPage
+export default NewPage;
