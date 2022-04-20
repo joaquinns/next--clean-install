@@ -80,7 +80,9 @@ export const uploadImage = (file) => {
   // Lo subimos
   const uploadTask = uploadBytesResumable(reference, file);
 
-  // Mientras se sube recuperamos su estado
+  return { uploadTask };
+
+  /*   // Mientras se sube recuperamos su estado
   uploadTask.on(
     "state_changed",
     (snapshot) => {
@@ -92,5 +94,5 @@ export const uploadImage = (file) => {
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then((url) => console.log(url));
     }
-  );
+  ); */
 };
