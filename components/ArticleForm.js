@@ -3,10 +3,16 @@ import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { uploadImage } from "../firebase/client";
+import { getDownloadURL } from "firebase/storage";
 import { useUser } from "context/authContext";
 
-export function ArticleForm() {
+export function ArticleForm({ articleUpdateId = null }) {
   const [urlImg, setUrlImg] = useState("");
+  const [updateArticle, setUpdateArticle] = useState({
+    articletitle: "",
+    price: "",
+    description: "",
+  });
   const { user } = useUser();
 
   /*   const handleFileUpload = (event) => {
@@ -21,24 +27,38 @@ export function ArticleForm() {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(progress);
       },
       // si hay error lo ejecutamos
       (err) => console.log(err),
-      // si todo fue ok hacemos un callback con una promesa recuperando la url
+      // si todo fue ok hacemos un callback con una promesa recuperando la url y la seteamos al estado
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => setUrlImg(url));
+        getDownloadURL(uploadTask.snapshot.ref).then(setUrlImg);
       }
     );
   };
+
+  useEffect(() => {
+    if (articleUpdateId !== null) {
+      axios
+        .get(`http://localhost:3000/api/articles/${articleUpdateId}`)
+        .then((res) => {
+          setUpdateArticle({
+            articletitle: res.data.articletitle,
+            description: res.data.description,
+            price: res.data.price,
+          });
+        });
+    }
+  }, [articleUpdateId]);
 
   return (
     <div className="w-full max-w-xs">
       <Formik
         initialValues={{
-          articletitle: "",
-          price: 0,
-          description: "",
-          imageUrl: urlImg,
+          articletitle: articleUpdateId ? updateArticle.articletitle : "",
+          price: articleUpdateId ? updateArticle.price : 0,
+          description: articleUpdateId ? updateArticle.description : "",
         }}
         validationSchema={
           new yup.ObjectSchema({
@@ -48,12 +68,31 @@ export function ArticleForm() {
           })
         }
         onSubmit={async (values, actions) => {
-          const res = await axios.post("http://localhost:3000/api/articles", {
-            ...values,
-            useremail: `${user.email}`,
-          });
-          console.log(res.data);
+          if (articleUpdateId !== null) {
+            await axios.put(
+              `http://localhost:3000/api/articles/${articleUpdateId}`,
+              {
+                ...values,
+                useremail: `${user.email}`,
+              }
+            );
+          }
+          return axios
+            .post("http://localhost:3000/api/articles", {
+              ...values,
+              useremail: `${user.email}`,
+            })
+            .then((response) => {
+              return axios
+                .post("http://localhost:3000/api/articles/image", {
+                  articleId: response.data.articleid,
+                  url: urlImg,
+                })
+                .catch((e) => console.error(e));
+            })
+            .catch((e) => console.log(e));
         }}
+        enableReinitialize
       >
         {({ handleSubmit, setFieldValue }) => (
           <Form
@@ -61,7 +100,11 @@ export function ArticleForm() {
             /* onSubmit={formik.handleSubmit} */
             className="bg-white shadow-md rounded px-8 py-6 pb-8 mb-4"
           >
-            <h1 className="mb-4 text-3xl font-bold">Crear</h1>
+            {articleUpdateId ? (
+              <h1 className="mb-4 text-3xl font-bold">Editar</h1>
+            ) : (
+              <h1 className="mb-4 text-3xl font-bold">Crear</h1>
+            )}
 
             <div className="mb-4">
               <label
@@ -149,7 +192,7 @@ export function ArticleForm() {
               type="submit"
               className="bg-emerald-500 hover:bg-emerald-700 py-2 px-4 rounded focus:outline-none focus:shadow-outline font-bold text-white"
             >
-              crear
+              {articleUpdateId ? "Editar" : "Crear"}
             </button>
           </Form>
         )}
